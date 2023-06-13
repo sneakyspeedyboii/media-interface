@@ -1,0 +1,27 @@
+2023-06-13T12:11:00.848307Z  INFO server: src\main.rs:44: Starting
+2023-06-13T12:11:02.177691Z  INFO server: src\main.rs:83: Socket server started
+2023-06-13T12:11:02.177784Z  INFO server: src\main.rs:97: Web Server started
+2023-06-13T12:11:06.635450Z  INFO server: src\main.rs:117: Accepted socket connection
+2023-06-13T12:11:06.649052Z  INFO server: src\main.rs:181: Socket connection closed
+2023-06-13T12:11:09.930027Z  INFO server: src\main.rs:117: Accepted socket connection
+2023-06-13T12:11:09.932919Z  INFO server: src\main.rs:181: Socket connection closed
+2023-06-13T12:11:17.481685Z  INFO server: src\main.rs:117: Accepted socket connection
+2023-06-13T12:11:22.472221Z  INFO server: src\main.rs:181: Socket connection closed
+2023-06-13T12:11:22.472288Z  INFO server: src\main.rs:111: Shutting down
+2023-06-13T12:13:42.681993Z  INFO server: src\main.rs:44: Starting
+2023-06-13T12:13:47.340300Z  INFO server: src\main.rs:84: Socket server started
+2023-06-13T12:13:47.340399Z  INFO server: src\main.rs:98: Web Server started
+2023-06-13T12:13:48.766179Z  INFO server: src\main.rs:78: peer="Accepted socket connection, Peer: 192.168.1.150:64249"
+2023-06-13T12:13:48.766913Z  INFO server: src\main.rs:118: Accepted socket connection
+2023-06-13T12:16:29.992021Z  INFO server: src\main.rs:46: Starting
+2023-06-13T12:16:36.051474Z  INFO server: src\main.rs:86: Socket server started
+2023-06-13T12:16:36.051532Z  INFO server: src\main.rs:100: Web Server started
+2023-06-13T12:16:36.290992Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:207: parsed 10 headers
+2023-06-13T12:16:36.291038Z DEBUG hyper::proto::h1::conn: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\conn.rs:222: incoming body is empty
+2023-06-13T12:16:36.291882Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 66 bytes
+2023-06-13T12:16:36.418988Z  INFO server: src\main.rs:80: New socket connection: 192.168.1.150:64327
+2023-06-13T12:16:36.419463Z  INFO server: src\main.rs:120: Accepted socket connection
+2023-06-13T12:16:36.419496Z DEBUG server: src\main.rs:144: MPSC sender started
+2023-06-13T12:16:36.419529Z DEBUG server: src\main.rs:156: Watch receiver started
+2023-06-13T12:16:36.419547Z DEBUG server: src\main.rs:159: Socket receive handler started
+2023-06-13T12:16:36.419560Z DEBUG server: src\main.rs:161: Socket send handler started
