@@ -25,3 +25,104 @@
 2023-06-13T12:16:36.419529Z DEBUG server: src\main.rs:156: Watch receiver started
 2023-06-13T12:16:36.419547Z DEBUG server: src\main.rs:159: Socket receive handler started
 2023-06-13T12:16:36.419560Z DEBUG server: src\main.rs:161: Socket send handler started
+2023-06-13T13:06:57.141849Z  INFO app: src\main.rs:49: Starting
+2023-06-13T13:07:21.350714Z  INFO app: src\main.rs:49: Starting
+2023-06-13T13:07:22.401017Z  INFO app: src\main.rs:49: Starting
+2023-06-13T13:07:23.382288Z  INFO app: src\main.rs:49: Starting
+2023-06-13T13:07:25.413805Z  INFO app: src\main.rs:49: Starting
+2023-06-13T13:07:27.699616Z  INFO app: src\main.rs:49: Starting
+2023-06-13T22:38:18.550511Z  INFO server: src\main.rs:51: Starting
+2023-06-13T22:39:33.729359Z  INFO server: src\main.rs:46: Starting
+2023-06-13T22:40:47.784513Z  INFO server: src\main.rs:46: Starting
+2023-06-13T22:41:14.397976Z  INFO server: src\main.rs:46: Starting
+2023-06-13T22:41:30.694549Z  INFO server: src\main.rs:46: Starting
+2023-06-13T22:41:42.207078Z  INFO server: src\main.rs:46: Starting
+2023-06-13T22:42:00.261278Z  INFO server: src\main.rs:46: Starting
+2023-06-13T22:44:10.048632Z  INFO server: src\main.rs:46: Starting
+2023-06-13T23:02:26.866514Z  INFO server: src\main.rs:49: Starting
+2023-06-13T23:02:26.869847Z  INFO server: src\main.rs:173: Socket server started
+2023-06-13T23:02:26.869975Z  INFO server: src\main.rs:188: Web Server started
+2023-06-13T23:15:35.202673Z  INFO server: src\main.rs:49: Starting
+2023-06-13T23:15:35.204651Z  INFO server: src\main.rs:168: Socket server started
+2023-06-13T23:15:35.204725Z  INFO server: src\main.rs:183: Web Server started
+2023-06-13T23:15:44.230871Z DEBUG hyper::server::shutdown: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\server\shutdown.rs:77: signal received, starting graceful shutdown
+2023-06-13T23:15:44.230881Z  INFO server: src\main.rs:197: Shutting down
+2023-06-13T23:15:46.431289Z  INFO server: src\main.rs:168: Socket server started
+2023-06-13T23:15:46.431357Z  INFO server: src\main.rs:183: Web Server started
+2023-06-13T23:15:46.438352Z DEBUG hyper::server::shutdown: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\server\shutdown.rs:77: signal received, starting graceful shutdown
+2023-06-13T23:15:46.438383Z  INFO server: src\main.rs:197: Shutting down
+2023-06-13T23:15:46.730323Z  INFO server: src\main.rs:168: Socket server started
+2023-06-13T23:15:46.730391Z  INFO server: src\main.rs:183: Web Server started
+2023-06-13T23:15:46.738350Z DEBUG hyper::server::shutdown: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\server\shutdown.rs:77: signal received, starting graceful shutdown
+2023-06-13T23:15:46.738388Z  INFO server: src\main.rs:197: Shutting down
+2023-06-13T23:15:47.016457Z  INFO server: src\main.rs:168: Socket server started
+2023-06-13T23:15:47.016543Z  INFO server: src\main.rs:183: Web Server started
+2023-06-13T23:15:47.024667Z DEBUG hyper::server::shutdown: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\server\shutdown.rs:77: signal received, starting graceful shutdown
+2023-06-13T23:15:47.024691Z  INFO server: src\main.rs:197: Shutting down
+2023-06-13T23:19:19.012392Z  INFO server: src\main.rs:49: Starting
+2023-06-13T23:19:19.014882Z  INFO server: src\main.rs:168: Socket server started
+2023-06-13T23:19:19.014983Z  INFO server: src\main.rs:183: Web Server started
+2023-06-13T23:20:13.861927Z  INFO server: src\main.rs:49: Starting
+2023-06-13T23:20:13.864457Z  INFO server: src\main.rs:169: Socket server started
+2023-06-13T23:20:13.864553Z  INFO server: src\main.rs:184: Web Server started
+2023-06-14T10:46:21.572489Z  INFO server: src\main.rs:46: Starting
+2023-06-14T11:31:39.578266Z  INFO server: src\main.rs:46: Starting
+2023-06-14T11:42:25.197140Z  INFO server: src\main.rs:45: Starting
+2023-06-14T11:42:54.251038Z  INFO server: src\main.rs:45: Starting
+2023-06-14T11:42:54.253603Z  INFO server: src\main.rs:127: Socket server started
+2023-06-14T11:42:54.253653Z  INFO server: src\main.rs:142: Web Server started
+2023-06-14T11:43:03.195254Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:207: parsed 8 headers
+2023-06-14T11:43:03.195307Z DEBUG hyper::proto::h1::conn: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\conn.rs:222: incoming body is empty
+2023-06-14T11:43:03.262545Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 171 bytes
+2023-06-14T11:43:03.262758Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 6986 bytes
+2023-06-14T11:43:03.304433Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:207: parsed 8 headers
+2023-06-14T11:43:03.304496Z DEBUG hyper::proto::h1::conn: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\conn.rs:222: incoming body is empty
+2023-06-14T11:43:03.305055Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:207: parsed 8 headers
+2023-06-14T11:43:03.305097Z DEBUG hyper::proto::h1::conn: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\conn.rs:222: incoming body is empty
+2023-06-14T11:43:03.305315Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 170 bytes
+2023-06-14T11:43:03.305586Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 2209 bytes
+2023-06-14T11:43:03.305737Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 170 bytes
+2023-06-14T11:43:03.305909Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 2216 bytes
+2023-06-14T11:43:03.316516Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:207: parsed 8 headers
+2023-06-14T11:43:03.316569Z DEBUG hyper::proto::h1::conn: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\conn.rs:222: incoming body is empty
+2023-06-14T11:43:03.316823Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:207: parsed 8 headers
+2023-06-14T11:43:03.316842Z DEBUG hyper::proto::h1::conn: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\conn.rs:222: incoming body is empty
+2023-06-14T11:43:03.317400Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:207: parsed 8 headers
+2023-06-14T11:43:03.317411Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:207: parsed 8 headers
+2023-06-14T11:43:03.317430Z DEBUG hyper::proto::h1::conn: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\conn.rs:222: incoming body is empty
+2023-06-14T11:43:03.317445Z DEBUG hyper::proto::h1::conn: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\conn.rs:222: incoming body is empty
+2023-06-14T11:43:03.323900Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 183 bytes
+2023-06-14T11:43:03.324097Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 416 bytes
+2023-06-14T11:43:03.336983Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 184 bytes
+2023-06-14T11:43:03.337227Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 3615 bytes
+2023-06-14T11:43:03.355826Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 185 bytes
+2023-06-14T11:43:03.356060Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 65536 bytes
+2023-06-14T11:43:03.356313Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 32198 bytes
+2023-06-14T11:43:03.373116Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 186 bytes
+2023-06-14T11:43:03.373320Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 65536 bytes
+2023-06-14T11:43:03.373469Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 65536 bytes
+2023-06-14T11:43:03.373735Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 29562 bytes
+2023-06-14T11:43:03.469558Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:207: parsed 8 headers
+2023-06-14T11:43:03.469604Z DEBUG hyper::proto::h1::conn: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\conn.rs:222: incoming body is empty
+2023-06-14T11:43:03.469951Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:207: parsed 9 headers
+2023-06-14T11:43:03.469977Z DEBUG hyper::proto::h1::conn: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\conn.rs:222: incoming body is empty
+2023-06-14T11:43:03.476506Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 172 bytes
+2023-06-14T11:43:03.476826Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 65536 bytes
+2023-06-14T11:43:03.476954Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 65536 bytes
+2023-06-14T11:43:03.477150Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 65536 bytes
+2023-06-14T11:43:03.477473Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 65536 bytes
+2023-06-14T11:43:03.477587Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 65536 bytes
+2023-06-14T11:43:03.477721Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 65536 bytes
+2023-06-14T11:43:03.477972Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 15536 bytes
+2023-06-14T11:43:03.487387Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 185 bytes
+2023-06-14T11:43:03.487620Z DEBUG hyper::proto::h1::io: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\proto\h1\io.rs:320: flushed 16318 bytes
+2023-06-14T11:43:03.506193Z  INFO server: src\main.rs:117: New socket connection: 192.168.1.150:57516
+2023-06-14T11:43:03.507050Z  INFO server: src\main.rs:162: Accepted socket connection
+2023-06-14T11:43:03.507140Z DEBUG server: src\main.rs:186: MPSC sender started
+2023-06-14T11:43:03.507166Z DEBUG server: src\main.rs:198: Watch receiver started
+2023-06-14T11:43:03.507181Z DEBUG server: src\main.rs:201: Socket receive handler started
+2023-06-14T11:43:03.507195Z DEBUG server: src\main.rs:203: Socket send handler started
+2023-06-14T11:43:10.073527Z DEBUG server: src\main.rs:215: Aborted all handlers
+2023-06-14T11:43:10.073527Z DEBUG hyper::server::shutdown: C:\Users\Jacob Stock\.cargo\registry\src\github.com-1ecc6299db9ec823\hyper-0.14.26\src\server\shutdown.rs:77: signal received, starting graceful shutdown
+2023-06-14T11:43:10.073549Z  INFO server: src\main.rs:156: Shutting down
+2023-06-14T11:43:10.073577Z  INFO server: src\main.rs:226: Socket connection closed

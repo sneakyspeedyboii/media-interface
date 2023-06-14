@@ -2,6 +2,7 @@
 /client/node_modules
 /client/pnpm-lock.yaml
 
-/server/assets/site/*
+/server/assets/site
+/server/assets/log.txt
 /server/target
 /server/Cargo.lock

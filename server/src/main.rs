@@ -1,25 +1,25 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-
+#[cfg(target_os = "windows")]
 use anyhow::{Error, Result};
-use axum::Router;
-use base64::alphabet::STANDARD;
-use base64::engine::{GeneralPurpose, GeneralPurposeConfig};
-use base64::Engine;
-use tracing::{event, Level};
-use std::env;
-use std::net::SocketAddr;
-use std::time::Duration;
-use tokio::sync::watch::Receiver;
-use tokio::sync::{mpsc, watch};
+use axum::routing::Router as AxumRouter;
+use base64::{
+    alphabet::STANDARD,
+    engine::{GeneralPurpose, GeneralPurposeConfig},
+    Engine,
+};
+use futures::{SinkExt, StreamExt};
+
+use serde::{Deserialize, Serialize};
+use std::{net::SocketAddr, time::Duration};
+use tokio::{
+    net::{TcpListener, TcpStream},
+    sync::{mpsc, watch, watch::Receiver},
+};
+use tokio_tungstenite::{accept_async, tungstenite::Message};
 use tokio_util::sync::CancellationToken;
 use tower_http::services::ServeDir;
-
-use futures::{SinkExt, StreamExt};
-use tokio::net::{TcpListener, TcpStream};
-use tokio_tungstenite::{accept_async, tungstenite::Message};
-
-use serde::Serialize;
-
+use tracing::{event, Level};
+use tray_icon::{menu::MenuEvent, ClickEvent, TrayEvent, TrayIconBuilder};
 use windows::{
     Media::Control::{
         GlobalSystemMediaTransportControlsSession,
@@ -28,56 +28,97 @@ use windows::{
     },
     Storage::Streams::DataReader,
 };
+use winit::event_loop::{ControlFlow, EventLoopBuilder};
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let log_writer = tracing_appender::rolling::never("./assets", "log.txt");
-
     let tracing = tracing_subscriber::fmt()
         .with_line_number(true)
         .with_file(true)
         .with_ansi(false)
-        .with_writer(log_writer)
         .with_max_level(Level::DEBUG)
+        .with_writer(log_writer)
         .finish();
 
     tracing::subscriber::set_global_default(tracing)?;
-
     event!(Level::INFO, "Starting");
 
-    dotenv::dotenv()?;
+    let config: Config = toml::from_str(&std::fs::read_to_string("./assets/config.toml")?)?;
 
-    let mut appstate = CancelToken(None);
-    loop {
-        let mut user_input = String::new();
-        std::io::stdin().read_line(&mut user_input)?;
+    let website = format!("{}:{}", config.ip, config.port).parse::<SocketAddr>()?;
+    let socket = format!("{}:{}", config.ip, config.port + 1).parse::<SocketAddr>()?;
 
-        let temp = appstate.clone();
-        if temp.0.is_none() {
-            let cancel = CancellationToken::new();
-            tokio::spawn(start_server(cancel.clone()));
-            appstate.0 = Some(cancel);
-        } else {
-            appstate.0.unwrap().clone().cancel();
-            appstate.0 = None;
+    let cancel = CancellationToken::new();
+    tokio::spawn(start_server(cancel.clone(), website, socket));
+
+    let mut state = Some(cancel);
+
+    let event_loop = EventLoopBuilder::new().build();
+
+    let (icon_rgba, icon_width, icon_height) = {
+        let image = image::open("./assets/icon.png")?.into_rgba8();
+        let (width, height) = image.dimensions();
+        let rgba = image.into_raw();
+        (rgba, width, height)
+    };
+    let icon = tray_icon::icon::Icon::from_rgba(icon_rgba, icon_width, icon_height)?;
+
+    let _tray_icon = TrayIconBuilder::new()
+        .with_tooltip("Media Interface")
+        .with_icon(icon)
+        .build()?;
+
+    let _menu_channel = MenuEvent::receiver();
+    let tray_channel = TrayEvent::receiver();
+
+    event_loop.run(move |_event, _, control_flow| {
+        *control_flow = ControlFlow::Poll;
+
+        if let Ok(event) = tray_channel.try_recv() {
+            if event.event == ClickEvent::Left {
+                if let Some(cancel_token) = state.take() {
+                    cancel_token.cancel();
+                } else {
+                    let cancel = CancellationToken::new();
+                    match read_config() {
+                        Ok((website, socket)) => {
+                            tokio::spawn(start_server(cancel.clone(), website, socket));
+                            state = Some(cancel)
+                        }
+                        Err(err) => event!(Level::ERROR, "Error reading config: {}", err),
+                    }
+                }
+            }
         }
-    }
+    });
 }
 
-async fn start_server(parent_cancel_token: CancellationToken) -> Result<()> {
-    let ip = env::var("IP")?;
-    let port = env::var("PORT")?.parse::<u16>()?;
-    let site = format!("{}:{}", ip, port).parse::<SocketAddr>()?;
-    let socket = format!("{}:{}", ip, port + 1).parse::<SocketAddr>()?;
+fn read_config() -> Result<(SocketAddr, SocketAddr)> {
+    let config: Config = toml::from_str(&std::fs::read_to_string("./assets/config.toml")?)?;
 
+    let website = format!("{}:{}", config.ip, config.port).parse::<SocketAddr>()?;
+    let socket = format!("{}:{}", config.ip, config.port + 1).parse::<SocketAddr>()?;
+
+    Ok((website, socket))
+}
+
+async fn start_server(
+    parent_cancel_token: CancellationToken,
+    site: SocketAddr,
+    socket: SocketAddr,
+) -> Result<()> {
     let listener = TcpListener::bind(socket).await?;
 
     //Socket
     let child_cancel_token = parent_cancel_token.clone();
     let socket_server = tokio::spawn(async move {
         while let Ok((stream, _)) = listener.accept().await {
-            
-            event!(Level::INFO, "New socket connection: {}",stream.peer_addr()?);
+            event!(
+                Level::INFO,
+                "New socket connection: {}",
+                stream.peer_addr()?
+            );
             tokio::spawn(handle_connection(stream, child_cancel_token.clone()));
         }
         Ok::<(), Error>(())
@@ -88,7 +129,8 @@ async fn start_server(parent_cancel_token: CancellationToken) -> Result<()> {
     //Website
     let website_cancel_token = parent_cancel_token.clone();
     let website = tokio::spawn(async move {
-        let router: Router = Router::new().nest_service("/", ServeDir::new("./assets/site"));
+        let router: AxumRouter =
+            AxumRouter::new().nest_service("/", ServeDir::new("./assets/site"));
         axum::Server::bind(&site)
             .serve(router.into_make_service())
             .with_graceful_shutdown(async {
@@ -291,6 +333,12 @@ fn get_thumbnail(
     Ok(data)
 }
 
+#[derive(Deserialize)]
+struct Config {
+    ip: String,
+    port: u16,
+}
+
 #[derive(Serialize)]
 struct MusicInfo {
     song_name: String,
@@ -303,6 +351,3 @@ struct MusicInfo {
     position: u128,
     playing: bool,
 }
-
-#[derive(Clone)]
-struct CancelToken(Option<CancellationToken>);

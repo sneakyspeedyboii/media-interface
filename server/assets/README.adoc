@@ -1,0 +1,5 @@
+= Asset section
+
+Log file stored here.
+Config file with ip address and port number stored here.
+Website placed in a "site" folder in here will be served.
