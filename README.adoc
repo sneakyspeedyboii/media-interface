@@ -1,3 +1,5 @@
 = Media Interface
 
 I Intended this to take 3 days and instead I spent a month figuring out shitty bugs.
+
+Update: Fixed shitty code, turns out GMST leaks memory and has not been fixed. lovely
