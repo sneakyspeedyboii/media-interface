@@ -17,8 +17,7 @@ export default function Home() {
   //Could probably trim down the use of useEffect. Im too lazy to do that
 
   useEffect(() => {
-    // const ws = new WebSocket(`ws://${window.location.hostname}:${Number.parseInt(window.location.port)}`);
-    const ws = new WebSocket(`ws://192.168.1.200:11000`);
+    const ws = new WebSocket(`ws://${window.location.hostname}:${Number.parseInt(window.location.port) + 1}`);
     setWebSocket(ws);
 
     ws.onmessage = (event) => {

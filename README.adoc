@@ -2,4 +2,4 @@
 
 I Intended this to take 3 days and instead I spent a month figuring out shitty bugs.
 
-Update: Fixed shitty code, turns out GMST leaks memory and has not been fixed. lovely
+Another update: Some reason GSMT does not panic when there are no media sessions. Cant remember if this is my shitty code or GSMT. either way i dont think it leaks anymore. at least it didnt in the length my attention span lasted.

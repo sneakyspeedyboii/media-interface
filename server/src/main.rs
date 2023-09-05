@@ -1,12 +1,13 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+use axum::Router;
+use base64::Engine;
 #[cfg(target_os = "windows")]
 use base64::{
     alphabet::STANDARD,
     engine::{GeneralPurpose, GeneralPurposeConfig},
-    Engine,
 };
 use color_eyre::{eyre::eyre, Result};
-use futures::{SinkExt, StreamExt, stream::FusedStream};
+use futures::{SinkExt, StreamExt};
 use serde::{Deserialize, Serialize};
 use std::{net::SocketAddr, sync::Arc, time::Duration};
 use tokio::{
@@ -14,6 +15,7 @@ use tokio::{
     time::sleep,
 };
 use tokio_tungstenite::{tungstenite::Message, WebSocketStream};
+use tower_http::services::ServeDir;
 use windows::{
     Media::Control::{
         GlobalSystemMediaTransportControlsSession,
@@ -29,11 +31,30 @@ async fn main() -> Result<()> {
 
     let config: Config = toml::from_str(&std::fs::read_to_string("./assets/config.toml")?)?;
 
+    let config = Arc::new(config);
+
     let state = Arc::new(AppState {
         base64_engine: GeneralPurpose::new(&STANDARD, GeneralPurposeConfig::default()),
+        gsmt_manager: GlobalSystemMediaTransportControlsSessionManager::RequestAsync()?.await?,
     });
 
-    let socket_addr = format!("{}:{}", config.ip, config.port).parse::<SocketAddr>()?;
+    let site = tokio::spawn(serve_site(config.clone()));
+    let socket = tokio::spawn(run_socket(config, state));
+
+    tokio::select! {
+        err = site => {
+            err.unwrap().unwrap();
+        },
+        err = socket => {
+            err.unwrap().unwrap();
+        },
+    }
+
+    Ok(())
+}
+
+async fn run_socket(config: Arc<Config>, state: Arc<AppState>) -> Result<()> {
+    let socket_addr = format!("{}:{}", config.ip, config.port + 1).parse::<SocketAddr>()?;
     let socket = TcpListener::bind(socket_addr).await?;
 
     while let Ok((stream, _addr)) = socket.accept().await {
@@ -44,15 +65,26 @@ async fn main() -> Result<()> {
     Ok(())
 }
 
+async fn serve_site(config: Arc<Config>) -> Result<()> {
+    let router: Router = Router::new().nest_service("/", ServeDir::new("./assets/site/"));
+    let site_addr = format!("{}:{}", config.ip, config.port).parse::<SocketAddr>()?;
+    axum::Server::try_bind(&site_addr)?
+        .serve(router.into_make_service())
+        .await?;
+    Ok(())
+}
 async fn socket_moment(app_state: Arc<AppState>, stream: WebSocketStream<TcpStream>) {
-    
     let (mut sink, mut stream) = stream.split();
 
+    let send_app_state = app_state.clone();
     let send = tokio::spawn(async move {
         loop {
-            println!("send");
-            let session = get_session().await?;
-            let music = get_session_details(app_state.clone(), &session).await?;
+            let session = get_session(send_app_state.clone()).await?;
+            let music = if let Some(session) = session {
+                get_session_details(send_app_state.clone(), &session).await?
+            } else {
+                MusicInfo::none()
+            };
 
             sink.send(Message::Text(serde_json::to_string(&music)?))
                 .await?;
@@ -64,27 +96,32 @@ async fn socket_moment(app_state: Arc<AppState>, stream: WebSocketStream<TcpStre
         Err::<(), color_eyre::eyre::Error>(eyre!("Send loop ended, exiting"))
     });
 
+    let recieve_app_state = app_state.clone();
     let recieve = tokio::spawn(async move {
         loop {
-            println!("recieve");
-            let message = stream.next().await.ok_or_else(|| eyre!("No next message"))??;
-            
+            let message = stream
+                .next()
+                .await
+                .ok_or_else(|| eyre!("No next message"))??;
+
             match message {
                 Message::Text(command) => {
-                    let session = get_session().await?;
+                    let session = get_session(recieve_app_state.clone()).await?;
 
-                    if command == "toggle" {
-                        session.TryTogglePlayPauseAsync()?;
-                    } else if command == "skip" {
-                        session.TrySkipNextAsync()?;
-                    } else if command == "back" {
-                        session.TrySkipPreviousAsync()?;
+                    if let Some(session) = session {
+                        if command == "toggle" {
+                            session.TryTogglePlayPauseAsync()?;
+                        } else if command == "skip" {
+                            session.TrySkipNextAsync()?;
+                        } else if command == "back" {
+                            session.TrySkipPreviousAsync()?;
+                        }
                     }
                 }
                 _ => {}
             }
         }
-      
+
         #[allow(unreachable_code)] //Specifies eyre error so I can smash a ? on the end
         Err::<(), color_eyre::eyre::Error>(eyre!("Recieve loop ended, exiting"))
     });
@@ -92,46 +129,41 @@ async fn socket_moment(app_state: Arc<AppState>, stream: WebSocketStream<TcpStre
     tokio::select! {
         send_result = send => {
             if let Err(e) = send_result {
-                eprintln!("{}", e);
+                println!("{}", e);
             }
         },
         recieve_result = recieve => {
             if let Err(e) = recieve_result {
-                eprintln!("{}", e);
+                println!("{}", e);
             }
         }
     }
-    println!("exited")
+    println!("Socket closed");
 }
 
-async fn get_session() -> Result<GlobalSystemMediaTransportControlsSession> {
-    match GlobalSystemMediaTransportControlsSessionManager::RequestAsync()?.await {
-        Ok(gsmt_session_manager) => {
-            let sessions: Vec<GlobalSystemMediaTransportControlsSession> =
-                gsmt_session_manager.GetSessions()?.into_iter().collect();
+async fn get_session(
+    app_state: Arc<AppState>,
+) -> Result<Option<GlobalSystemMediaTransportControlsSession>> {
+    let sessions: Vec<GlobalSystemMediaTransportControlsSession> =
+        app_state.gsmt_manager.GetSessions()?.into_iter().collect();
 
-            if sessions.is_empty() {
-                return Err(eyre!("No sessions found"));
-            }
-
-            for session in sessions.clone() {
-                if session
-                    .SourceAppUserModelId()?
-                    .to_string()
-                    .to_lowercase()
-                    .contains("spotify.exe")
-                //I like spotify prioritisation
-                {
-                    return Ok(session);
-                }
-            }
-
-            Ok(sessions[0].to_owned())
-        }
-        Err(_) => Err(eyre!(
-            "Could not get session manager (Caused by all sessions closing? not sure tbh)"
-        )),
+    if sessions.is_empty() {
+        return Ok(None);
     }
+
+    for session in sessions.clone() {
+        if session
+            .SourceAppUserModelId()?
+            .to_string()
+            .to_lowercase()
+            .contains("spotify.exe")
+        //I like spotify prioritisation
+        {
+            return Ok(Some(session));
+        }
+    }
+
+    Ok(Some(sessions[0].to_owned()))
 }
 
 async fn get_session_details(
@@ -157,7 +189,7 @@ async fn get_session_details(
             windows::Media::Control::GlobalSystemMediaTransportControlsSessionPlaybackStatus::Playing => true,
             _ => false,
         },
-        // album_artwork: app_state.base64_engine.encode(get_thumbnail(&session_info)?),
+        album_artwork: app_state.base64_engine.encode(get_thumbnail(&session_info)?),
     };
 
     Ok(music_info)
@@ -189,6 +221,7 @@ struct Config {
 
 struct AppState {
     base64_engine: GeneralPurpose,
+    gsmt_manager: GlobalSystemMediaTransportControlsSessionManager,
 }
 
 #[derive(Serialize, Debug)]
@@ -201,5 +234,21 @@ struct MusicInfo {
     end_time: u128,
     position: u128,
     playing: bool,
-    // album_artwork: String,
+    album_artwork: String,
+}
+
+impl MusicInfo {
+    fn none() -> Self {
+        Self {
+            song_name: format!("No media currently!"),
+            song_subtitle: String::new(),
+            artist: String::new(),
+            album: String::new(),
+            start_time: 0,
+            end_time: 0,
+            position: 0,
+            playing: false,
+            album_artwork: String::new(),
+        }
+    }
 }
