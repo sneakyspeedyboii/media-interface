@@ -1,7 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#[cfg(target_os = "windows")]
 use axum::Router;
 use base64::Engine;
-#[cfg(target_os = "windows")]
 use base64::{
     alphabet::STANDARD,
     engine::{GeneralPurpose, GeneralPurposeConfig},
@@ -30,7 +30,6 @@ async fn main() -> Result<()> {
     color_eyre::install()?;
 
     let config: Config = toml::from_str(&std::fs::read_to_string("./assets/config.toml")?)?;
-
     let config = Arc::new(config);
 
     let state = Arc::new(AppState {
@@ -38,29 +37,10 @@ async fn main() -> Result<()> {
         gsmt_manager: GlobalSystemMediaTransportControlsSessionManager::RequestAsync()?.await?,
     });
 
-    let site = tokio::spawn(serve_site(config.clone()));
-    let socket = tokio::spawn(run_socket(config, state));
-
     tokio::select! {
-        err = site => {
-            err.unwrap().unwrap();
-        },
-        err = socket => {
-            err.unwrap().unwrap();
-        },
-    }
-
-    Ok(())
-}
-
-async fn run_socket(config: Arc<Config>, state: Arc<AppState>) -> Result<()> {
-    let socket_addr = format!("{}:{}", config.ip, config.port + 1).parse::<SocketAddr>()?;
-    let socket = TcpListener::bind(socket_addr).await?;
-
-    while let Ok((stream, _addr)) = socket.accept().await {
-        let socket = tokio_tungstenite::accept_async(stream).await?;
-        tokio::spawn(socket_moment(state.clone(), socket));
-    }
+        _ = serve_site(config.clone()) => {},
+        _ = run_socket(config.clone(), state.clone()) => {},
+    };
 
     Ok(())
 }
@@ -73,6 +53,18 @@ async fn serve_site(config: Arc<Config>) -> Result<()> {
         .await?;
     Ok(())
 }
+
+async fn run_socket(config: Arc<Config>, state: Arc<AppState>) -> Result<()> {
+    let socket_addr = format!("{}:{}", config.ip, config.port + 1).parse::<SocketAddr>()?;
+    let socket = TcpListener::bind(socket_addr).await?;
+
+    loop {
+        let (stream, _addr) = socket.accept().await?;
+        let socket = tokio_tungstenite::accept_async(stream).await?;
+        tokio::spawn(socket_moment(state.clone(), socket));
+    }
+}
+
 async fn socket_moment(app_state: Arc<AppState>, stream: WebSocketStream<TcpStream>) {
     let (mut sink, mut stream) = stream.split();
 
@@ -81,7 +73,9 @@ async fn socket_moment(app_state: Arc<AppState>, stream: WebSocketStream<TcpStre
         loop {
             let session = get_session(send_app_state.clone()).await?;
             let music = if let Some(session) = session {
-                get_session_details(send_app_state.clone(), &session).await?
+                get_session_details(send_app_state.clone(), &session)
+                    .await
+                    .unwrap_or(MusicInfo::none())
             } else {
                 MusicInfo::none()
             };
@@ -127,18 +121,9 @@ async fn socket_moment(app_state: Arc<AppState>, stream: WebSocketStream<TcpStre
     });
 
     tokio::select! {
-        send_result = send => {
-            if let Err(e) = send_result {
-                println!("{}", e);
-            }
-        },
-        recieve_result = recieve => {
-            if let Err(e) = recieve_result {
-                println!("{}", e);
-            }
-        }
-    }
-    println!("Socket closed");
+        send_result = send => {send_result.unwrap().unwrap()},
+        recieve_result = recieve => {recieve_result.unwrap().unwrap()},
+    };
 }
 
 async fn get_session(
